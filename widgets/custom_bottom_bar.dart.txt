@@ -1,0 +1,313 @@
+import 'package:flutter/material.dart';
+import 'package:mubicloud/core/app_export.dart';
+
+import 'app_bar/custum_bottom_bar_controller.dart';
+
+// ignore: must_be_immutable
+class CustomBottomBar extends StatelessWidget {
+  CustomBottomBar({
+    Key? key,
+    this.onChanged,
+  }) : super(
+          key: key,
+        );
+
+  RxInt selectedIndex = 0.obs;
+
+  List<BottomMenuModel> bottomMenuList = [
+    BottomMenuModel(
+        icon: ImageConstant.imghomeIcon,
+        title: "lbl_home".tr,
+        type: BottomBarEnum.Home,
+        selectedicon: ImageConstant.imghomeIconSelected),
+    BottomMenuModel(
+        icon: ImageConstant.imgSearchIcon,
+        title: "lbl_search".tr,
+        type: BottomBarEnum.Search,
+        selectedicon: ImageConstant.imgSearchIconSelected),
+    BottomMenuModel(
+        icon: ImageConstant.imglibraryIcon,
+        title: "lbl_playlists".tr,
+        type: BottomBarEnum.Playlists,
+        selectedicon: ImageConstant.imglibraryIconSelected),
+    BottomMenuModel(
+        icon: ImageConstant.imgprofileIcon,
+        title: "lbl_profile".tr,
+        type: BottomBarEnum.Profile,
+        selectedicon: ImageConstant.imgProfileIconSelected)
+  ];
+
+  Function(BottomBarEnum)? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: appTheme.white700,
+        boxShadow: [
+          BoxShadow(
+            color: UIConstants().textColor.withOpacity(0.03),
+            spreadRadius: getHorizontalSize(
+              0,
+            ),
+            blurRadius: getHorizontalSize(
+              16,
+            ),
+            offset: Offset(
+              0,
+              -6,
+            ),
+          ),
+        ],
+      ),
+      child: GetBuilder<CustomBottomBarController>(
+        init: CustomBottomBarController(),
+        builder: (controller) => BottomNavigationBar(
+          backgroundColor: appTheme.white700,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          elevation: 0,
+          currentIndex: controller.selectedIndex,
+          type: BottomNavigationBarType.fixed,
+          items: List.generate(bottomMenuList.length, (index) {
+            return BottomNavigationBarItem(
+              icon: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  CustomImageView(
+                    svgPath: bottomMenuList[index].icon,
+                    height: getVerticalSize(
+                      24,
+                    ),
+                    width: getHorizontalSize(
+                      24,
+                    ),
+                    // color: ColorConstant.indigo800,
+                  ),
+                  Text(
+                    bottomMenuList[index].title ?? "",
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.left,
+                    style: TextThemeHelper.bodyMedium13.copyWith(
+                      color: appTheme.gray600,
+                    ),
+                  ),
+                ],
+              ),
+              activeIcon: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  CustomImageView(
+                    svgPath: bottomMenuList[index].selectedicon,
+                    height: getVerticalSize(
+                      24,
+                    ),
+                    width: getHorizontalSize(
+                      24,
+                    ),
+                    // color: ColorConstant.indigo800,
+                  ),
+                  Text(
+                    bottomMenuList[index].title ?? "",
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.left,
+                    style: TextThemeHelper.bodyMedium13.copyWith(
+                      color: appTheme.deepPurpleA200,
+                    ),
+                  ),
+                ],
+              ),
+              label: '',
+            );
+          }),
+          onTap: (index) {
+            controller.getIndex(index);
+          },
+        ),
+      ),
+    );
+  }
+
+  //
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //       color: theme.colorScheme.primary,
+  //       boxShadow: [
+  //         BoxShadow(
+  //           color: UIConstants().textColor.withOpacity(0.03),
+  //           spreadRadius: getHorizontalSize(
+  //             2,
+  //           ),
+  //           blurRadius: getHorizontalSize(
+  //             2,
+  //           ),
+  //           offset: Offset(
+  //             0,
+  //             -6,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //     child: Obx(
+  //       () => BottomNavigationBar(
+  //         backgroundColor: Colors.transparent,
+  //         showSelectedLabels: false,
+  //         showUnselectedLabels: false,
+  //         elevation: 0,
+  //         currentIndex: selectedIndex.value,
+  //         type: BottomNavigationBarType.fixed,
+  //         items: List.generate(bottomMenuList.length, (index) {
+  //           return BottomNavigationBarItem(
+  //             icon: Container(
+  //               padding: getPadding(
+  //                 left: 34,
+  //                 top: 21,
+  //                 right: 34,
+  //                 bottom: 21,
+  //               ),
+  //               decoration: AppDecoration.white,
+  //               child: Column(
+  //                 mainAxisSize: MainAxisSize.min,
+  //                 crossAxisAlignment: CrossAxisAlignment.center,
+  //                 mainAxisAlignment: MainAxisAlignment.start,
+  //                 children: [
+  //                   CustomImageView(
+  //                     svgPath: bottomMenuList[index].icon,
+  //                     height: getVerticalSize(
+  //                       24,
+  //                     ),
+  //                     width: getHorizontalSize(
+  //                       24,
+  //                     ),
+  //                     color: appTheme.gray600,
+  //                     margin: getMargin(
+  //                       top: 22,
+  //                     ),
+  //                   ),
+  //                   Padding(
+  //                     padding: getPadding(
+  //                       top: 11,
+  //                       bottom: 21,
+  //                     ),
+  //                     child: Text(
+  //                       bottomMenuList[index].title ?? "",
+  //                       overflow: TextOverflow.ellipsis,
+  //                       textAlign: TextAlign.left,
+  //                       style: TextThemeHelper.bodyMedium13.copyWith(
+  //                         color: appTheme.gray600,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //             activeIcon: Container(
+  //               padding: getPadding(
+  //                 left: 36,
+  //                 top: 21,
+  //                 right: 36,
+  //                 bottom: 21,
+  //               ),
+  //               decoration: AppDecoration.white,
+  //               child: Column(
+  //                 mainAxisSize: MainAxisSize.min,
+  //                 crossAxisAlignment: CrossAxisAlignment.center,
+  //                 mainAxisAlignment: MainAxisAlignment.start,
+  //                 children: [
+  //                   CustomImageView(
+  //                     svgPath: bottomMenuList[index].icon,
+  //                     height: getVerticalSize(
+  //                       24,
+  //                     ),
+  //                     width: getHorizontalSize(
+  //                       24,
+  //                     ),
+  //                     color: appTheme.deepPurpleA200,
+  //                     margin: getMargin(
+  //                       top: 22,
+  //                     ),
+  //                   ),
+  //                   Padding(
+  //                     padding: getPadding(
+  //                       top: 11,
+  //                       bottom: 21,
+  //                     ),
+  //                     child: Text(
+  //                       bottomMenuList[index].title ?? "",
+  //                       overflow: TextOverflow.ellipsis,
+  //                       textAlign: TextAlign.left,
+  //                       style:
+  //                           TextThemeHelper.bodyMediumDeeppurpleA200.copyWith(
+  //                         color: appTheme.deepPurpleA200,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //             label: '',
+  //           );
+  //         }),
+  //         onTap: (index) {
+  //           selectedIndex.value = index;
+  //           onChanged?.call(bottomMenuList[index].type);
+  //         },
+  //       ),
+  //     ),
+  //   );
+  // }
+}
+
+enum BottomBarEnum {
+  Home,
+  Search,
+  Library,
+  Profile,
+  Playlists,
+}
+
+class BottomMenuModel {
+  BottomMenuModel({
+    required this.icon,
+    required this.selectedicon,
+    this.title,
+    required this.type,
+  });
+
+  String icon;
+  String selectedicon;
+
+  String? title;
+
+  BottomBarEnum type;
+}
+
+class DefaultWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: UIConstants().textLight,
+      padding: EdgeInsets.all(10.h.w),
+      child: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Please replace the respective Widget here',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
